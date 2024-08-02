@@ -1,0 +1,42 @@
+#name: sirene_api
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: api-sirene:develop
+    environment:
+      CASSANDRA_HOST: cassandra
+      CASSANDRA_PORT: 9042
+      CASSANDRA_USER: admin
+      CASSANDRA_PASSWORD: admin
+    depends_on:
+      - cassandra
+    ports:
+      - "8888:8888"
+    networks:
+      - api_network
+    volumes:
+      - api-logs:/var/log/api
+
+  cassandra:
+    image: cassandra:4.1.5
+    container_name: cassandra-container
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_USER=admin
+      - CASSANDRA_PASSWORD=admin
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    networks:
+      - api_network
+
+volumes:
+  cassandra-data: 
+  api-logs:
+
+networks:
+  api_network:
+    driver: bridge

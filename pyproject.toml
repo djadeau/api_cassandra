@@ -1,0 +1,33 @@
+[tool.pytest.ini_options]
+pythonpath="."
+filterwarnings=[]
+env=[
+    "CASSANDRA_USER=admin",
+    "CASSANDRA_PASSWORD=admin"
+]
+env_override_existing_values=1
+env_files=[
+    "tests/.local.env"
+]
+addopts="--import-mode=importlib"
+log_level="INFO"
+
+[tool.coverage.run]
+command_line="-m pytest --junitxml=junit.xml"
+source=[
+    "."
+]
+omit=[
+    "tests/*",
+    "app/migrations/*"
+]
+
+[tool.coverage.report]
+exclude_lines=[
+    "pragma: no cover",
+    "if __name__==.__main__.:",
+    "except ImportError:"
+]
+skip_covered=true
+precision=2
+sort="-miss"

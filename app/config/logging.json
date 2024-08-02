@@ -1,0 +1,64 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "generic": {
+            "class": "logging.Formatter",
+            "format": "%(asctime)s [%(process)d] [%(levelname)s] %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S"
+        },
+        "access": {
+            "class": "logging.Formatter",
+            "format": "%(message)s"
+        },
+        "json": {
+            "class": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "format": "%(asctime)s %(name)s %(levelname)s %(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "generic",
+            "stream": "ext://sys.stdout"
+        },
+        "access": {
+            "class": "concurrent_log_handler.ConcurrentRotatingFileHandler",
+            "level": "INFO",
+            "formatter": "access",
+            "filename": "/var/log/api/access.log",
+            "mode": "a",
+            "backupCount": 1,
+            "maxBytes": 1048576,
+            "use_gzip": false
+        },
+        "root": {
+            "class": "concurrent_log_handler.ConcurrentRotatingFileHandler",
+            "level": "INFO",
+            "formatter": "json",
+            "filename": "/var/log/api/api.log",
+            "mode": "a",
+            "backupCount": 1,
+            "maxBytes": 1048576,
+            "use_gzip": false
+        }
+    },
+    "loggers": {
+        "root": {
+            "level": "INFO",
+            "handlers": ["console", "root"]
+        },
+        "_granian": {
+            "handlers": ["console", "root"],
+            "level": "INFO",
+            "propagate": false
+        },
+        "access": {
+            "level": "INFO",
+            "handlers": ["console", "access"],
+            "propagate": false,
+            "qualname": "access"
+        }
+    }
+}
